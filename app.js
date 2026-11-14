@@ -35,8 +35,13 @@
   $("#checkResult").addEventListener("click", e => {
     const b = e.target.closest("[data-sit]"); if (!b) return;
     selectSit(+b.dataset.sit);
-    $("#situation").scrollIntoView();
+    goPanel();
   });
+  function goPanel() {
+    const panel = $("#sitPanel");
+    panel.scrollIntoView({ behavior: "smooth", block: "start" });
+    panel.classList.remove("flash"); void panel.offsetWidth; panel.classList.add("flash");
+  }
 
   /* ---------- STEP 2 상황별 ---------- */
   $("#sitGrid").innerHTML = SITUATIONS.map((s, i) =>
@@ -58,7 +63,7 @@
   $("#sitGrid").addEventListener("click", e => {
     const b = e.target.closest(".sit"); if (!b) return;
     selectSit(+b.dataset.i);
-    if (window.innerWidth < 620) $("#sitPanel").scrollIntoView({ block: "nearest" });
+    goPanel();
   });
   selectSit(0);
 
@@ -278,7 +283,9 @@
     ents.forEach(en => {
       if (!en.isIntersecting) return;
       tabs.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + en.target.id));
-      const on = $(".tabs a.on"); if (on) on.scrollIntoView({ inline: "center", block: "nearest" });
+      // 상단 탭만 가로로 이동 (scrollIntoView는 페이지 스크롤을 끊어서 사용하지 않음)
+      const on = $(".tabs a.on"), box = $(".tabs-inner");
+      if (on) box.scrollTo({ left: on.offsetLeft - box.clientWidth / 2 + on.offsetWidth / 2, behavior: "smooth" });
     });
   }, { rootMargin: "-45% 0px -50% 0px" });
   $$("main .section").forEach(s => io.observe(s));

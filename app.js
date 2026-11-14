@@ -243,16 +243,14 @@
     const now = new Date(), s = new Date(CONFIG.groupBuyStart), e = new Date(CONFIG.groupBuyEnd);
     const md = d => `${d.getMonth() + 1}월 ${d.getDate()}일(${"일월화수목금토"[d.getDay()]})`;
     const dday = Math.ceil((e - now) / 86400000);
-    let state, btn;
-    if (now < s) { state = "오픈 예정"; btn = `<span class="btn disabled">링크는 공동구매 기간에 열려요</span>`; }
-    else if (now <= e) { state = dday <= 1 ? "오늘 마감!" : `진행중 · 마감 D-${dday - 1}`; btn = `<a class="btn" href="${CONFIG.groupBuyLink}" target="_blank" rel="noopener">구성과 가격 확인하기 →</a>`; }
-    else { state = "마감"; btn = `<span class="btn disabled">이번 공동구매는 마감됐어요</span>`; }
+    const state = now < s ? "오픈 예정" : now <= e ? (dday <= 1 ? "오늘 마감!" : `진행중 · 마감 D-${dday - 1}`) : "마감";
+    const btn = `<a class="btn" href="${CONFIG.groupBuyLink}" target="_blank" rel="noopener">구성과 가격 확인하기 →</a>`;
     $("#gb").innerHTML = `<span class="state">${state}</span>
-      <h3>📅 ${CONFIG.groupBuyRound} 공동구매</h3>
+      <h3>📅 ${CONFIG.groupBuyRound} 공동구매 · 이뮨파파</h3>
       <p><b>${md(s)} ~ ${md(e)}</b></p>
-      <p>🎁 선착순, 구매인증 이벤트도 놓치지 마세요^^<br>이뮨파파랑 궁합 좋은 성장 필수 영양제 <b>칼마디케이투부스터</b>도 같이 예정되어 있어요</p>
+      <p>🎁 선착순, 구매인증 이벤트도 놓치지 마세요^^</p>
       ${btn}
-      <small>${now > e ? "다음 공동구매 소식은 단톡방·인스타에서 제일 먼저 알려드릴게요" : "공동구매 시작 알림은 단톡방·인스타에서 받아보세요"}</small>`;
+      <div class="gb-next"><b>🦴 칼마디케이투부스터</b> · 11월 23일부터 오픈 예정<br><span>이뮨파파랑 궁합 좋은 성장 필수 영양제예요^^</span></div>`;
   }
 
   /* ---------- 상담/링크 ---------- */

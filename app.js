@@ -244,7 +244,7 @@
     const md = d => `${d.getMonth() + 1}월 ${d.getDate()}일(${"일월화수목금토"[d.getDay()]})`;
     const dday = Math.ceil((e - now) / 86400000);
     const state = now < s ? "오픈 예정" : now <= e ? (dday <= 1 ? "오늘 마감!" : `진행중 · 마감 D-${dday - 1}`) : "마감";
-    const btn = `<a class="btn" href="${CONFIG.groupBuyLink}" target="_blank" rel="noopener">구성과 가격 확인하기 →</a>`;
+    const btn = `<a class="btn" href="${CONFIG.groupBuyLink}" target="_blank" rel="noopener">이뮨파파 구매하러 가기 →</a>`;
     $("#gb").innerHTML = `<span class="state">${state}</span>
       <h3>📅 ${CONFIG.groupBuyRound} 공동구매 · 이뮨파파</h3>
       <p><b>${md(s)} ~ ${md(e)}</b></p>

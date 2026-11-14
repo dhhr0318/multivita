@@ -249,14 +249,6 @@
     const t = $("#toast"); t.textContent = msg; t.hidden = false;
     clearTimeout(toast._t); toast._t = setTimeout(() => t.hidden = true, 1800);
   }
-  $("#shareBtn").addEventListener("click", async () => {
-    const url = location.href.split("#")[0];
-    const data = { title: "아이 종합비타민 완.벽.선택가이드", text: "약사아빠가 비교한 아이 종합비타민 19종", url };
-    try {
-      if (navigator.share) await navigator.share(data);
-      else { await navigator.clipboard.writeText(url); toast("링크를 복사했어요"); }
-    } catch (_) { }
-  });
 
   /* ---------- 공통 클릭 ---------- */
   document.addEventListener("click", e => {

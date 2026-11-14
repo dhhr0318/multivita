@@ -67,29 +67,42 @@
   const FG = [["all", "전체"], ["hf", "건강기능식품"], ["otc", "일반의약품"], ["add", "추가 5종 NEW"]];
   const FA = [["all", "전 연령"], ["u12", "돌 전부터 가능"], ["12m", "12개월~"], ["3y", "만 3세~"]];
   const FF = [["all", "모든 제형"], ["분말", "분말"], ["액상", "액상"], ["젤리스틱", "젤리스틱"], ["츄어블", "츄어블"]];
-  const chipRow = (el, list, key) => {
-    el.innerHTML = list.map(([v, t]) => `<button class="chip" aria-pressed="${F[key] === v}" data-v="${v}">${t}</button>`).join("");
+  const ROWS = [[$("#fGroup"), FG, "group"], [$("#fAge"), FA, "age"], [$("#fForm"), FF, "form"]];
+  ROWS.forEach(([el, list, key]) => {
     el.addEventListener("click", e => {
-      const b = e.target.closest(".chip"); if (!b) return;
+      const b = e.target.closest(".chip"); if (!b || b.disabled) return;
       F[key] = b.dataset.v;
-      $$(".chip", el).forEach(c => c.setAttribute("aria-pressed", c === b));
       renderGrid();
     });
-  };
-  chipRow($("#fGroup"), FG, "group");
-  chipRow($("#fAge"), FA, "age");
-  chipRow($("#fForm"), FF, "form");
+  });
   $("#q").addEventListener("input", e => { F.q = e.target.value.trim(); renderGrid(); });
 
   const ageOk = (p, a) => a === "all" || (a === "u12" ? p.age === "u12" : a === "12m" ? p.age !== "3y" : true);
-  const haystack = p => [p.name, p.type, p.tagline, p.flavor, ...(p.points || []), ...(p.focus || []), ...(p.sub || []), ...(p.extraMain || []),
+  const haystack = p => [p.name, p.type, p.tagline, p.flavor, p.form, ...(p.points || []), ...(p.focus || []), ...(p.sub || []), ...(p.extraMain || []),
     ...Object.keys(p.n).map(k => NUT[k][1] + " " + NUT[k][2])].join(" ").toLowerCase();
+  const match = (p, f) => (f.group === "all" || p.group === f.group) && ageOk(p, f.age) &&
+    (f.form === "all" || p.form === f.form) && (!f.q || haystack(p).includes(f.q.toLowerCase()));
+
+  function renderChips() {
+    ROWS.forEach(([el, list, key]) => {
+      el.innerHTML = list.map(([v, t]) => {
+        const n = PRODUCTS.filter(p => match(p, { ...F, [key]: v })).length;
+        const on = F[key] === v;
+        return `<button class="chip" aria-pressed="${on}" data-v="${v}" ${!n && !on ? "disabled" : ""}>${t} <span class="n">${n}</span></button>`;
+      }).join("");
+    });
+    const active = F.group !== "all" || F.age !== "all" || F.form !== "all" || F.q;
+    $("#fReset").hidden = !active;
+  }
+  function resetFilters() {
+    F.group = F.age = F.form = "all"; F.q = ""; $("#q").value = "";
+    renderGrid();
+  }
+  $("#fReset").addEventListener("click", resetFilters);
 
   function renderGrid() {
-    const q = F.q.toLowerCase();
-    const list = PRODUCTS.filter(p =>
-      (F.group === "all" || p.group === F.group) && ageOk(p, F.age) &&
-      (F.form === "all" || p.form === F.form) && (!q || haystack(p).includes(q)));
+    renderChips();
+    const list = PRODUCTS.filter(p => match(p, F));
     $("#count").textContent = `${list.length}개 제품`;
     $("#grid").innerHTML = list.length ? list.map(p => `
       <div class="card" role="button" tabindex="0" data-open="${p.id}">
@@ -102,7 +115,8 @@
           <span class="card-meta">${p.basis} ${p.form} · ${p.flavor}</span>
           <div class="tags"><span class="tag ${p.group}">${GROUPS[p.group].name}</span><span class="tag">${p.ageText.split(" / ")[0]}</span>${p.china ? `<span class="tag warn">중국산 원료</span>` : ""}</div>
         </div>
-      </div>`).join("") : `<p class="empty">찾는 제품이 없어요 🥲<br>여기 없는 제품은 <a href="#contact">상담</a> 주시면 봐드릴게요</p>`;
+      </div>`).join("") : `<p class="empty">조건에 맞는 제품이 없어요 🥲<br><button class="btn ghost" data-reset style="margin:12px 0">조건 초기화하기</button><br>여기 없는 제품은 <a href="#contact">상담</a> 주시면 봐드릴게요</p>`;
+    const rb = $("#grid [data-reset]"); if (rb) rb.addEventListener("click", resetFilters);
   }
 
   /* ---------- 상세 시트 ---------- */

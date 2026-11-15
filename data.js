@@ -6,7 +6,7 @@
 /* ---- 링크 설정 ---- */
 const CONFIG = {
   // 카카오톡 단체방(오픈채팅) 링크: 만들고 나서 따옴표 안에 넣어주세요. 비워두면 버튼이 숨겨져요.
-  kakaoGroup: "",
+  kakaoGroup: "https://open.kakao.com/o/gY5QGdXi",
   kakaoConsult: "https://pf.kakao.com/_YbSfn/friend",
   instagram: "https://www.instagram.com/yak.filter/",
   groupBuyLink: "https://papas-promise.com/surl/P/89?utm_source=filter&utm_medium=gonggu&utm_campaign=immune",

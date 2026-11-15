@@ -250,13 +250,15 @@
       <p><b>${md(s)} ~ ${md(e)}</b></p>
       <p>🎁 선착순, 구매인증 이벤트도 놓치지 마세요^^</p>
       ${btn}
+      ${CONFIG.kakaoGroup ? `<a class="btn kakao-btn" href="${CONFIG.kakaoGroup}" target="_blank" rel="noopener">💬 카톡 공구알림방</a>
+      <p class="gb-kakao-note">공구 오픈 알림은 물론, 알림방에서만 진행하는 다양한 이벤트와 혜택이 있어요🎁<br>다음 공구 소식도 제일 먼저 알려드릴게요^^</p>` : ""}
       <div class="gb-next"><b>🦴 칼마디케이투부스터</b> · 11월 23일부터 오픈 예정<br><span>이뮨파파랑 궁합 좋은 성장 필수 영양제예요^^</span></div>`;
   }
 
   /* ---------- 상담/링크 ---------- */
   const cb = [];
   cb.push(`<a class="cbtn kakao" href="${CONFIG.kakaoConsult}" target="_blank" rel="noopener"><span class="ci">💬</span><span><b>카카오톡 1:1 상담</b><small>먹이는 제품, 아이 상태 편하게 물어보세요</small></span></a>`);
-  if (CONFIG.kakaoGroup) cb.push(`<a class="cbtn" href="${CONFIG.kakaoGroup}" target="_blank" rel="noopener"><span class="ci">👨‍👩‍👧</span><span><b>카카오톡 단체방 들어오기</b><small>공동구매·업데이트 소식 제일 먼저 받기</small></span></a>`);
+  if (CONFIG.kakaoGroup) cb.push(`<a class="cbtn" href="${CONFIG.kakaoGroup}" target="_blank" rel="noopener"><span class="ci">👨‍👩‍👧</span><span><b>카톡 공구알림방</b><small>다양한 이벤트와 혜택, 공구 소식 제일 먼저 받기</small></span></a>`);
   cb.push(`<a class="cbtn" href="${CONFIG.instagram}" target="_blank" rel="noopener"><span class="ci">📷</span><span><b>인스타그램 @yak.filter</b><small>영양제 정보 꾸준히 올리고 있어요</small></span></a>`);
   $("#contactBtns").innerHTML = cb.join("");
   $("#dockConsult").href = CONFIG.kakaoConsult;
